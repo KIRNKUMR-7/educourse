@@ -1,0 +1,19 @@
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java backend (not deployed to Vercel)
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log

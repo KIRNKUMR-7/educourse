@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register for an in-demand tech course at EduVerse. Pick from 15 expert-led programs and start learning today.">
+    <title>Register for a Course — EduVerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="page-header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">🎓 EduVerse</a>
+            <div class="nav-links">
+                <a href="available.html">Courses</a>
+                <a href="registeres.html">Students</a>
+                <a href="register.html" class="nav-cta" style="background:#1a1a28 !important; border:1px solid rgba(124,58,237,0.5)">Register Now</a>
+            </div>
+        </nav>
+        <div class="page-hero">
+            <h1>✍️ Register for a Course</h1>
+            <p>Fill in your details below and get started right away.</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="form-card">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="course">Select Course</label>
+                    <select id="course" name="CourseName" required>
+                        <option value="" disabled selected>— Choose a course —</option>
+                        <option>Java Full Stack Development</option>
+                        <option>Python &amp; Django Web Development</option>
+                        <option>React &amp; Node.js</option>
+                        <option>Data Science &amp; Machine Learning</option>
+                        <option>Cloud Computing with AWS</option>
+                        <option>DevOps &amp; Docker</option>
+                        <option>Android App Development</option>
+                        <option>UI/UX Design Fundamentals</option>
+                        <option>C &amp; C++ Programming</option>
+                        <option>Cybersecurity Essentials</option>
+                        <option>SQL &amp; Database Design</option>
+                        <option>Spring Boot &amp; Microservices</option>
+                        <option>Artificial Intelligence &amp; NLP</option>
+                        <option>Flutter &amp; Dart Mobile Dev</option>
+                        <option>Blockchain Fundamentals</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="e.g. Kiran Kumar" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="e.g. kiran@example.com" required>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">🚀 Register Now</button>
+            </form>
+
+            <div id="successMsg" style="display:none; text-align:center; margin-top:24px;">
+                <div style="font-size:3rem">🎉</div>
+                <h3 style="margin:12px 0 8px; font-size:1.3rem">You're Registered!</h3>
+                <p style="color:#94a3b8; font-size:0.9rem" id="successText"></p>
+                <a href="available.html" class="btn-primary" style="display:inline-block; margin-top:20px">Browse More Courses</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 EduVerse. Built with ❤️ for learners.</p>
+    </footer>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const btn    = document.getElementById("submitBtn");
+            const course = document.getElementById("course").value;
+            const name   = document.getElementById("name").value;
+            const email  = document.getElementById("email").value;
+
+            btn.textContent = "Submitting...";
+            btn.disabled = true;
+
+            /* Try backend first — skipped in static/Vercel mode */
+            var savedToBackend = false;
+            if (typeof BACKEND_URL !== 'undefined' && BACKEND_URL) {
+                try {
+                    const controller = new AbortController();
+                    setTimeout(function() { controller.abort(); }, 3000);
+                    const res = await fetch(
+                        BACKEND_URL + "/Courses/Register?CourseName=" + encodeURIComponent(course) +
+                        "&email=" + encodeURIComponent(email) + "&name=" + encodeURIComponent(name),
+                        { method: "POST", signal: controller.signal }
+                    );
+                    if (res.ok) savedToBackend = true;
+                } catch (err) { /* backend offline */ }
+            }
+
+            /* Always save to localStorage */
+            var stored = JSON.parse(localStorage.getItem("eduverse_registrations") || "[]");
+            stored.push({ name: name, email: email, CourseName: course, date: new Date().toISOString() });
+            localStorage.setItem("eduverse_registrations", JSON.stringify(stored));
+
+            /* Always show success */
+            document.getElementById("registerForm").style.display = "none";
+            document.getElementById("successText").textContent =
+                "Thank you for registering, " + name + "! Best wishes for learning " + course + ".";
+            document.getElementById("successMsg").style.display = "block";
+        });
+    </script>
+</body>
+</html>

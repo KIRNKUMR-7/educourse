@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore 15 industry-ready tech courses at EduVerse. Filter by duration, browse trainers, and enroll in minutes.">
+    <title>Available Courses — EduVerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #09090f; --surface: #111118; --border: rgba(255,255,255,0.07);
+            --accent: #7c3aed; --text: #eef2f7; --muted: #8896a7;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        a { text-decoration: none; color: inherit; }
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.2rem; font-weight: 800; }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a { color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-cta {
+            background: var(--accent) !important; color: #fff !important;
+            padding: 8px 18px; border-radius: 8px; font-weight: 600 !important;
+        }
+        .page-hero {
+            text-align: center; padding: 50px 24px 40px;
+            background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%);
+            border-bottom: 1px solid var(--border);
+        }
+        .page-hero h1 { font-size: 2rem; font-weight: 800; }
+        .page-hero p  { color: var(--muted); margin-top: 8px; font-size: 0.93rem; }
+        .toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 28px 40px; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;
+        }
+        .pills { display: flex; gap: 10px; flex-wrap: wrap; }
+        .pill {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 50px; padding: 7px 16px; font-size: 0.8rem; font-weight: 600;
+        }
+        .pill b { color: #a78bfa; }
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .filters span { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+        .filter-btn {
+            padding: 7px 16px; border-radius: 50px;
+            border: 1px solid var(--border); background: transparent;
+            color: var(--muted); font-size: 0.8rem; font-weight: 600;
+            font-family: 'Inter', sans-serif; cursor: pointer; transition: all .2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.5); color: #a78bfa;
+        }
+        .courses-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px; padding: 0 40px 70px; max-width: 1200px; margin: 0 auto;
+        }
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 26px; display: flex;
+            flex-direction: column; gap: 12px; transition: transform .22s, border-color .22s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: rgba(124,58,237,0.4); }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .card-icon {
+            font-size: 2rem; background: rgba(124,58,237,0.1);
+            border-radius: 10px; width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .dur {
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px;
+            border-radius: 50px; background: rgba(6,182,212,0.1);
+            border: 1px solid rgba(6,182,212,0.25); color: #22d3ee; white-space: nowrap;
+        }
+        .cat { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; }
+        .card-name { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+        .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; flex: 1; }
+        .card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px; border-top: 1px solid var(--border);
+        }
+        .trainer { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+        .avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.62rem; font-weight: 800; color: #fff; flex-shrink: 0;
+        }
+        .enroll {
+            padding: 7px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 700;
+            background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+            color: #a78bfa; transition: background .2s;
+        }
+        .enroll:hover { background: rgba(124,58,237,0.25); }
+        footer { text-align: center; padding: 28px; color: #3d4a5a; font-size: 0.82rem; border-top: 1px solid var(--border); }
+        @media (max-width: 640px) {
+            nav { padding: 16px 20px; }
+            .nav-links a:not(.nav-cta) { display: none; }
+            .courses-grid { padding: 0 16px 50px; }
+            .toolbar { padding: 16px 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="index.html" class="logo">🎓 EduVerse</a>
+    <div class="nav-links">
+        <a href="available.html" class="active" style="color:#a78bfa">Courses</a>
+        <a href="registeres.html">Students</a>
+        <a href="register.html" class="nav-cta">Register Now</a>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <h1>📚 Available Courses</h1>
+    <p>Explore our catalog of industry-ready programs. Pick your track and start learning.</p>
+</div>
+
+<div class="toolbar">
+    <div class="pills">
+        <div class="pill">🎓 <b>15</b> Courses</div>
+        <div class="pill">⏳ <b>2–8</b> Months</div>
+        <div class="pill">👨‍🏫 Expert <b>Trainers</b></div>
+    </div>
+    <div class="filters">
+        <span>Filter:</span>
+        <button class="filter-btn active" onclick="filter('all',this)">All</button>
+        <button class="filter-btn" onclick="filter('short',this)">Short (≤3 mo)</button>
+        <button class="filter-btn" onclick="filter('medium',this)">Medium (4–5 mo)</button>
+        <button class="filter-btn" onclick="filter('long',this)">Long (6+ mo)</button>
+    </div>
+</div>
+
+<div class="courses-grid" id="grid">
+    <div class="card" data-dur="6">
+        <div class="card-top"><div class="card-icon">☕</div><span class="dur">6 Months</span></div>
+        <div class="cat" style="color:#fb923c">Backend</div>
+        <div class="card-name">Java Full Stack Development</div>
+        <div class="card-desc">Master Java, Spring Boot, Hibernate and build production-grade full-stack web apps.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">RK</div>Ramesh Kumar</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="4">
+        <div class="card-top"><div class="card-icon">🐍</div><span class="dur">4 Months</span></div>
+        <div class="cat" style="color:#fb923c">Backend</div>
+        <div class="card-name">Python &amp; Django Web Development</div>
+        <div class="card-desc">Build powerful web applications using Python and Django with REST APIs.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">PS</div>Priya Sharma</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="5">
+        <div class="card-top"><div class="card-icon">⚛️</div><span class="dur">5 Months</span></div>
+        <div class="cat" style="color:#22d3ee">Frontend</div>
+        <div class="card-name">React &amp; Node.js</div>
+        <div class="card-desc">Create dynamic UIs with React and scalable backends with Node.js &amp; Express.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">AR</div>Arjun Reddy</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="8">
+        <div class="card-top"><div class="card-icon">📊</div><span class="dur">8 Months</span></div>
+        <div class="cat" style="color:#c4b5fd">AI / ML</div>
+        <div class="card-name">Data Science &amp; Machine Learning</div>
+        <div class="card-desc">From data cleaning to ML models — pandas, scikit-learn, TensorFlow and more.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">AI</div>Dr. Ananya Iyer</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="3">
+        <div class="card-top"><div class="card-icon">☁️</div><span class="dur">3 Months</span></div>
+        <div class="cat" style="color:#93c5fd">Cloud</div>
+        <div class="card-name">Cloud Computing with AWS</div>
+        <div class="card-desc">Deploy, scale and secure apps with EC2, S3, Lambda, RDS and CloudFormation.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">VN</div>Vikram Nair</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="4">
+        <div class="card-top"><div class="card-icon">🐳</div><span class="dur">4 Months</span></div>
+        <div class="cat" style="color:#6ee7b7">DevOps</div>
+        <div class="card-name">DevOps &amp; Docker</div>
+        <div class="card-desc">CI/CD pipelines, Docker, Kubernetes, Jenkins and infrastructure as code.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">SR</div>Siddharth Rao</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="6">
+        <div class="card-top"><div class="card-icon">📱</div><span class="dur">6 Months</span></div>
+        <div class="cat" style="color:#fde68a">Mobile</div>
+        <div class="card-name">Android App Development</div>
+        <div class="card-desc">Build modern Android apps with Kotlin, Jetpack Compose and Firebase.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">MP</div>Meena Pillai</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="3">
+        <div class="card-top"><div class="card-icon">🎨</div><span class="dur">3 Months</span></div>
+        <div class="cat" style="color:#f9a8d4">Design</div>
+        <div class="card-name">UI/UX Design Fundamentals</div>
+        <div class="card-desc">User research, wireframing, Figma prototyping and design systems.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">SJ</div>Sneha Joshi</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="3">
+        <div class="card-top"><div class="card-icon">💻</div><span class="dur">3 Months</span></div>
+        <div class="cat" style="color:#a78bfa">Programming</div>
+        <div class="card-name">C &amp; C++ Programming</div>
+        <div class="card-desc">Master memory management, pointers, OOP and competitive programming.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">SB</div>Dr. Suresh Babu</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="5">
+        <div class="card-top"><div class="card-icon">🔒</div><span class="dur">5 Months</span></div>
+        <div class="cat" style="color:#fca5a5">Security</div>
+        <div class="card-name">Cybersecurity Essentials</div>
+        <div class="card-desc">Network security, ethical hacking, OWASP, penetration testing basics.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">AM</div>Arun Mehta</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="2">
+        <div class="card-top"><div class="card-icon">🗃️</div><span class="dur">2 Months</span></div>
+        <div class="cat" style="color:#67e8f9">Database</div>
+        <div class="card-name">SQL &amp; Database Design</div>
+        <div class="card-desc">Relational DB design, complex SQL queries, indexing and normalization.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">KN</div>Kavya Nandakumar</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="5">
+        <div class="card-top"><div class="card-icon">🌿</div><span class="dur">5 Months</span></div>
+        <div class="cat" style="color:#fb923c">Backend</div>
+        <div class="card-name">Spring Boot &amp; Microservices</div>
+        <div class="card-desc">Build and deploy loosely coupled microservices using Spring Boot &amp; Docker.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">RS</div>Ravi Shankar</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="7">
+        <div class="card-top"><div class="card-icon">🧠</div><span class="dur">7 Months</span></div>
+        <div class="cat" style="color:#c4b5fd">AI / ML</div>
+        <div class="card-name">Artificial Intelligence &amp; NLP</div>
+        <div class="card-desc">Deep learning, transformers, language models and real-world AI applications.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">LK</div>Dr. Leela Krishnan</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="4">
+        <div class="card-top"><div class="card-icon">📲</div><span class="dur">4 Months</span></div>
+        <div class="cat" style="color:#fde68a">Mobile</div>
+        <div class="card-name">Flutter &amp; Dart Mobile Dev</div>
+        <div class="card-desc">Cross-platform iOS &amp; Android apps with Flutter, Dart, and Firebase backend.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">HP</div>Harish Patel</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+    <div class="card" data-dur="3">
+        <div class="card-top"><div class="card-icon">₿</div><span class="dur">3 Months</span></div>
+        <div class="cat" style="color:#fdba74">Emerging</div>
+        <div class="card-name">Blockchain Fundamentals</div>
+        <div class="card-desc">Ethereum, Solidity smart contracts, DeFi concepts and Web3 foundations.</div>
+        <div class="card-footer"><div class="trainer"><div class="avatar">DV</div>Deepak Verma</div><a href="register.html" class="enroll">Enroll →</a></div>
+    </div>
+</div>
+
+<footer><p>© 2026 EduVerse. Built with ♥ for learners.</p></footer>
+
+<script>
+    function filter(type, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.card').forEach(card => {
+            var dur = parseInt(card.getAttribute('data-dur'));
+            var show = type === 'all'    ? true
+                     : type === 'short'  ? dur <= 3
+                     : type === 'medium' ? (dur === 4 || dur === 5)
+                     : dur >= 6;
+            card.style.display = show ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>
