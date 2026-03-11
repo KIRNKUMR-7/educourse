@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse all students registered at EduVerse. See who is enrolled and in which tech courses.">
+    <title>Registered Students — EduVerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        .students-wrap {
+            padding: 0 40px 70px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Search + count toolbar */
+        .stu-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 220px;
+            max-width: 360px;
+            padding: 11px 18px;
+            background: #12121a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50px;
+            color: #f1f5f9;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-input::placeholder { color: #475569; }
+        .search-input:focus {
+            border-color: rgba(124,58,237,0.5);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+        }
+        .count-badge {
+            background: rgba(6,182,212,0.12);
+            border: 1px solid rgba(6,182,212,0.25);
+            color: #22d3ee;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        /* Students table styled */
+        .students-table-wrap {
+            background: #12121a;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .stu-table { width: 100%; border-collapse: collapse; }
+
+        .stu-table thead {
+            background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.1));
+        }
+        .stu-table th {
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #a78bfa;
+        }
+        .stu-table td {
+            padding: 14px 20px;
+            font-size: 0.88rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #e2e8f0;
+            vertical-align: middle;
+        }
+        .stu-row:hover td { background: rgba(124,58,237,0.04); }
+        .stu-row { display: table-row; }
+        .stu-row.hidden { display: none; }
+
+        /* Avatar cell */
+        .stu-name-cell { display: flex; align-items: center; gap: 12px; }
+        .avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0;
+        }
+        .stu-name-text { font-weight: 700; }
+
+        /* course pill */
+        .course-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(124,58,237,0.12);
+            border: 1px solid rgba(124,58,237,0.25);
+            color: #c4b5fd;
+        }
+
+        /* status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+        .status-active {
+            background: rgba(52,211,153,0.12);
+            border: 1px solid rgba(52,211,153,0.25);
+            color: #6ee7b7;
+        }
+
+        @media (max-width: 640px) {
+            .students-wrap { padding: 0 16px 50px; }
+            .stu-table th:nth-child(3),
+            .stu-table td:nth-child(3) { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">🎓 EduVerse</a>
+            <div class="nav-links">
+                <a href="available.html">Courses</a>
+                <a href="registeres.html" style="color:#a78bfa">Students</a>
+                <a href="register.html" class="nav-cta">Register Now</a>
+            </div>
+        </nav>
+        <div class="page-hero">
+            <h1>👥 Registered Students</h1>
+            <p>Students who are already on the path to mastery.</p>
+        </div>
+    </div>
+
+    <div class="students-wrap">
+        <div class="stu-toolbar">
+            <input type="text" class="search-input" id="searchInput"
+                   placeholder="🔍  Search by name, email or course…"
+                   oninput="filterStudents()">
+            <div class="count-badge" id="countBadge">Loading…</div>
+        </div>
+        <div class="students-table-wrap">
+            <table class="stu-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student</th>
+                        <th>Email</th>
+                        <th>Course Enrolled</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsBody"></tbody>
+            </table>
+        </div>
+
+        <div id="emptyMsg" style="display:none; text-align:center; padding:40px; color:#64748b;">
+            No results found.
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 EduVerse. Built with ❤️ for learners.</p>
+    </footer>
+
+    <script>
+        const SAMPLE_STUDENTS = [
+            { id:1,  name:'Rohit Verma',       email:'rohit.v@example.com',     CourseName:'Java Full Stack Development' },
+            { id:2,  name:'Aisha Khan',        email:'aisha.k@example.com',     CourseName:'Python & Django Web Development' },
+            { id:3,  name:'Sonu Mishra',       email:'sonu.m@example.com',      CourseName:'React & Node.js' },
+            { id:4,  name:'Preethi Rajan',     email:'preethi.r@example.com',   CourseName:'Data Science & Machine Learning' },
+            { id:5,  name:'Imran Hussain',     email:'imran.h@example.com',     CourseName:'Cloud Computing with AWS' },
+            { id:6,  name:'Divya Nair',        email:'divya.n@example.com',     CourseName:'Java Full Stack Development' },
+            { id:7,  name:'Kartik Singh',      email:'kartik.s@example.com',    CourseName:'Spring Boot & Microservices' },
+            { id:8,  name:'Nancy Philip',      email:'nancy.p@example.com',     CourseName:'SQL & Database Design' },
+            { id:9,  name:'Raju Yadav',        email:'raju.y@example.com',      CourseName:'Android App Development' },
+            { id:10, name:'Simran Ahuja',      email:'simran.a@example.com',    CourseName:'UI/UX Design Fundamentals' },
+            { id:11, name:'Arjun Bose',        email:'arjun.b@example.com',     CourseName:'Cybersecurity Essentials' },
+            { id:12, name:'Nandini Gupta',     email:'nandini.g@example.com',   CourseName:'Flutter & Dart Mobile Dev' },
+            { id:13, name:'Tarun Mehta',       email:'tarun.m@example.com',     CourseName:'DevOps & Docker' },
+            { id:14, name:'Swathi Krishnan',   email:'swathi.k@example.com',    CourseName:'Artificial Intelligence & NLP' },
+            { id:15, name:'Omkar Patil',       email:'omkar.p@example.com',     CourseName:'Blockchain Fundamentals' },
+            { id:16, name:'Lavanya Subramaniam', email:'lavanya.s@example.com', CourseName:'C & C++ Programming' },
+        ];
+
+        function getInitials(n) { return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+        let rows = [];
+
+        function renderStudents(studs) {
+            const tbody = document.getElementById("studentsBody");
+            tbody.innerHTML = '';
+            rows = [];
+            studs.forEach((s, i) => {
+                const tr = document.createElement('tr');
+                tr.className = 'stu-row';
+                tr.dataset.search = (s.name + ' ' + s.email + ' ' + s.CourseName).toLowerCase();
+                tr.innerHTML = `
+                    <td style="color:#64748b;font-size:0.8rem">${i+1}</td>
+                    <td>
+                        <div class="stu-name-cell">
+                            <div class="avatar">${getInitials(s.name)}</div>
+                            <span class="stu-name-text">${s.name}</span>
+                        </div>
+                    </td>
+                    <td style="color:#64748b">${s.email}</td>
+                    <td><span class="course-pill">${s.CourseName}</span></td>
+                    <td><span class="status-badge status-active">● Active</span></td>
+                `;
+                tbody.appendChild(tr);
+                rows.push(tr);
+            });
+            document.getElementById("countBadge").textContent = studs.length + ' student' + (studs.length !== 1 ? 's' : '');
+        }
+
+        function filterStudents() {
+            const q = document.getElementById("searchInput").value.toLowerCase();
+            let v = 0;
+            rows.forEach(r => {
+                const show = r.dataset.search.includes(q);
+                r.classList.toggle('hidden', !show);
+                if (show) v++;
+            });
+            document.getElementById("countBadge").textContent = v + ' student' + (v !== 1 ? 's' : '');
+            document.getElementById("emptyMsg").style.display = v === 0 ? 'block' : 'none';
+        }
+
+        /* Show static data + any localStorage registrations immediately */
+        var localRegs = JSON.parse(localStorage.getItem("eduverse_registrations") || "[]");
+        renderStudents(SAMPLE_STUDENTS.concat(localRegs));
+
+        async function loadStudents() {
+            if (typeof BACKEND_URL === 'undefined' || !BACKEND_URL) return;
+            try {
+                const controller = new AbortController();
+                setTimeout(function() { controller.abort(); }, 3000);
+                const res = await fetch(BACKEND_URL + "/Courses/RegisteredStudents", { signal: controller.signal });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                if (data.length) renderStudents(data.concat(localRegs)); // backend students + local
+            } catch { /* backend offline — already showing combined data */ }
+        }
+
+        loadStudents();
+    </script>
+</body>
+</html>
